@@ -13,7 +13,8 @@ Il s'agit du MVP d'une application d'évaluation de sauces piquantes ; la partie
 Les données des utilisateurs doivent parfaitement protégées.
 Pour cela, l’API utilisée devra impérativement respecter des pratiques de code sécurisé.
 
-L’API doit respecter le RGPD et les standards OWASP ;
+L’API doit respecter le RGPD et les standards OWASP :
+
 ● le mot de passe des utilisateurs doit être chiffré ;
 ● 2 types de droits administrateur à la base de données doivent être définis : un accès
 pour supprimer ou modifier des tables, et un accès pour éditer le contenu de la base

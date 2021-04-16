@@ -12,7 +12,7 @@ const userRoutes = require('./routes/user'); //Importe le routeur pour les utili
 const rateLimit = require("express-rate-limit");
 
 
-//fichier de variable d'environnement pour db
+//Crée un environnement de variable pour db
 require('dotenv').config();
 
 //Connecte l'API à la base de données mongoDB grâce à mongoose

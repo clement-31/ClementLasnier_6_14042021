@@ -4,7 +4,7 @@ const router = express.Router(); //Permet de charger le middleware au niveau du 
 
 const userCtrl = require('../controllers/user');
 const passValidate = require('../middleware/passValidate');
-const mailValidate = require('../middleware/mailValidate');
+const mailValidate = require('../middleware/mailValidation');
 const rateLimit = require("express-rate-limit");
 
 const rateLimiter = rateLimit({

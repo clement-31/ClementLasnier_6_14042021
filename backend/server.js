@@ -1,8 +1,8 @@
-const http = require('http');
-const app = require('./app');
+const http = require("http");// Permet d'utiliser le serveur http
+const app = require("./app");
 
-// Permet de retourner un port valide, qu'il soit obtenu sous la forme du nombre ou d'une chaîne de caractères
-const normalizePort = val => {
+//Permet de retourner un port valide, qu'il soit obtenu sous la forme d'un nombre ou d'une chaine de caractères
+const normalizePort = (val) => {
     const port = parseInt(val, 10);
 
     if (isNaN(port)) {
@@ -13,23 +13,24 @@ const normalizePort = val => {
     }
     return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+const port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);//On indique quel port utiliser dans app.js
 
-//Renvoie les erreurs pour les traiter
-const errorHandler = error => {
-    if (error.syscall !== 'listen') {
+//Permet de renvoyer les erreurs afin de les traiter
+const errorHandler = (error) => {
+    if (error.syscall !== "listen") {
         throw error;
     }
     const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;
+    const bind =
+        typeof address === "string" ? "pipe " + address : "port: " + port;
     switch (error.code) {
-        case 'EACCES':
-            console.error(bind + ' requires elevated privileges.');
+        case "EACCES":
+            console.error(bind + " requires elevated privileges.");
             process.exit(1);
             break;
-        case 'EADDRINUSE':
-            console.error(bind + ' is already in use.');
+        case "EADDRINUSE":
+            console.error(bind + " is already in use.");
             process.exit(1);
             break;
         default:
@@ -37,18 +38,15 @@ const errorHandler = error => {
     }
 };
 
-//Construit le serveur avec le protocole http et en utilisant app.js
-const server = http.createServer(app);
+const server = http.createServer(app);//Construit le serveur avec le protocole http et en utilisant app.js
 
-//Lancement du gestionnaire d'erreur
-server.on('error', errorHandler);
-
-//Lancement du serveur et affichage des informations de connexion dans la console
-server.on('listening', () => {
+server.on("error", errorHandler);//Lance le gestionnaire d'erreurs
+server.on("listening", () => { //Lance le serveur et affiche les infos de connexion dans la console
     const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-    console.log('Listening on ' + bind);
+    const bind = typeof address === "string" ? "pipe " + address : "port " + port;
+    console.log("Listening on " + bind);
 });
 
 server.listen(port);
+
 

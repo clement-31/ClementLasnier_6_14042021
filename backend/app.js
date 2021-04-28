@@ -3,12 +3,14 @@ const mongoose = require("mongoose"); //Importe Mongoose qui permet la création
 const helmet = require("helmet");//Importe helmet pour sécuriser les en-têtes des requêtes
 const mongoSanitize = require('express-mongo-sanitize');//Import mongo-sanitize qui sert à empêcher l'injection de code dans les champs utilisateurs
 const path = require('path');//Permet d'accéder aux chemins d'accès des fichiers
+const xssClean = require("xss-clean");
 require('dotenv').config();//Permet de créer un environnement de variables
 
 const sauceRoutes = require('./routes/sauce');//Importe le routeur pour les sauces
 const userRoutes = require('./routes/user');//Importe le routeur pour les utilisateurs
 
 const app = express(); //Applique le framework express
+
 app.use(helmet());//Applique les sous-plugins de helmet
 
 mongoose //Connecte l'API à la base de données MongoDB grâce à Mongoose
@@ -40,6 +42,9 @@ app.use(express.json());
 
 //Nettoie les champs utilisateurs des tentatives d'injection de code commençant par "$" ou "."
 app.use(mongoSanitize());
+
+//Protection contre les attaques XSS
+app.use(xssClean());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));//Permet de servir les fichiers statiques présents dans le dossier images
 

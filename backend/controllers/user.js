@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt"); //Permet de hasher et saler les mots de passe
 const jwt = require("jsonwebtoken"); //Permet de créer un token utilisateur
 const MaskData = require("../node_modules/maskdata");
-
+require("dotenv").config();
 const User = require("../models/user");
 
 const passwordValidator = require("password-validator");

@@ -5,21 +5,21 @@ const mongoSanitize = require('express-mongo-sanitize');//Import mongo-sanitize 
 const path = require('path');//Permet d'accéder aux chemins d'accès des fichiers
 const xssClean = require("xss-clean");
 require('dotenv').config();//Permet de créer un environnement de variables
-
+console.log(process.env);
 const sauceRoutes = require('./routes/sauce');//Importe le routeur pour les sauces
 const userRoutes = require('./routes/user');//Importe le routeur pour les utilisateurs
 
-const app = express(); //Applique le framework express
-
-app.use(helmet());//Applique les sous-plugins de helmet
-
-mongoose //Connecte l'API à la base de données MongoDB grâce à Mongoose
-    .connect(
-        `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.6vps7.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`,
-        { useNewUrlParser: true, useUnifiedTopology: true }
-    )
+//Connecte l'API à la base de données MongoDB grâce à Mongoose
+mongoose.connect(
+    'mongodb+srv://newuserP6:P6Xolosa31@clusterp6.whu2r.mongodb.net/Projet6OC?retryWrites=true&w=majority',
+    { useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true}
+)
     .then(() => console.log("Connexion à MongoDB réussie !"))
     .catch(() => console.log("Connexion à MongoDB échouée !"));
+
+const app = express(); //Applique le framework express
 
 //Définit les paramètres d'en-tête
 app.use((req, res, next) => {
@@ -36,6 +36,8 @@ app.use((req, res, next) => {
     );
     next();
 });
+
+app.use(helmet());//Applique les sous-plugins de helmet
 
 //Permet de récupérer le corps de la requête au format json
 app.use(express.json());

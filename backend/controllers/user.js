@@ -68,7 +68,7 @@ exports.login = (req, res, next) => {
                             //On attribue un token d'authentification
                             {userId: user._id},
                             process.env.JWT_SECRET_TOKEN,
-                            {expiresIn: "24h"}
+                            {expiresIn: "1h"}
                         ),
                     });
                 })

@@ -54,7 +54,7 @@ exports.login = (req, res, next) => {
     }) //On cherche l'email correspondant dans la collection
         .then((user) => {
             if (!user) {
-                return res.status(404).json({error: "Utilisateur non trouvé !"});
+                return res.status(401).json({error: "Utilisateur non trouvé !"});
             }
             bcrypt
                 .compare(req.body.password, user.password) //on compare le mot de passe de la requête avec le hash de l'utilisateur

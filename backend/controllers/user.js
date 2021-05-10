@@ -48,7 +48,7 @@ exports.signup = (req, res, next) => {
 
 //Connexion d'un utlisateur existant
 exports.login = (req, res, next) => {
-    console.log(process.env.JWT_SECRET_TOKEN);
+
     User.findOne({
         email: MaskData.maskEmail2(req.body.email, emailMask2Options),
     }) //On cherche l'email correspondant dans la collection

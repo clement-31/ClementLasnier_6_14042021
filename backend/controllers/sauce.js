@@ -86,7 +86,7 @@ exports.likeDislikeSauce = (req, res, next) => {
             )
                 .then(() =>res.status(201).json({ message: `Vous aimez la sauce` })
                 )
-                .catch((error) => res.status(400).json({ error }));
+                .catch((error) => res.status(500).json({ error }));
             break;
         case -1: //L'utilisateur n'aime pas la sauce
             Sauce.updateOne(
@@ -98,7 +98,7 @@ exports.likeDislikeSauce = (req, res, next) => {
             )
                 .then(() =>res.status(200).json({ message: `Vous n'aimez pas la sauce` })
                 )
-                .catch((error) => res.status(400).json({ error }));
+                .catch((error) => res.status(500).json({ error }));
             break;
         case 0:
             Sauce.findOne({ _id: id })
@@ -114,7 +114,7 @@ exports.likeDislikeSauce = (req, res, next) => {
                         )
                             .then(() => {res.status(200).json({ message: `Vote annulé  pour la sauce ${sauce.name}` });
                             })
-                            .catch((error) => res.status(400).json({ error }));
+                            .catch((error) => res.status(500).json({ error }));
                     }
                     if (sauce.usersDisliked.includes(userId)) {
                         Sauce.updateOne(
@@ -126,7 +126,7 @@ exports.likeDislikeSauce = (req, res, next) => {
                         )
                             .then(() =>res.status(200).json({ message: `Vote annulé  pour la sauce ${sauce.name}` })
                             )
-                            .catch((error) => res.status(400).json({ error }));
+                            .catch((error) => res.status(500).json({ error }));
                     }
                 })
                 .catch((error) => res.status(500).json({ error }));

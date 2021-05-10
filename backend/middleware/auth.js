@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
         }
     } catch(err) {
         res.status(401).json({
-            error: new Error("Invalid request!"),
+            error: new Error("Unauthorized request!"),
         });
     }
 };

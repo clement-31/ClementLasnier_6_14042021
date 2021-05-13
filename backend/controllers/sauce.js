@@ -8,10 +8,14 @@ exports.createSauce = (req, res, next) => {
     const sauce = new Sauce({
         ...sauceObject, //Utilise l'opérateur spread pour copier les infos du corps de la requête
         imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`, //On génère l'url par rapport à son nom de fichier
+        likes: 0,
+        dislikes: 0,
+        usersLiked: [],
+        usersDisLiked: []
     });
     sauce
         .save() //Sauvegarde la nouvelle sauce dans la base de données
-        .then(() => res.status(201).json({ message: `Sauce enregistrée !` }))
+        .then(() => res.status(201).json({ message: `Votre sauce est enregistrée !` }))
         .catch((error) => res.status(400).json({ error }));
 };
 
@@ -36,7 +40,7 @@ exports.modifySauce = (req, res, next) => {
         { _id: req.params.id },
         { ...sauceObject, _id: req.params.id }
     )
-        .then(() => res.status(200).json({ message: `Sauce modifiée !` }))
+        .then(() => res.status(200).json({ message: `Votre sauce a bien été modifiée !` }))
         .catch((error) => res.status(400).json({ error }));
 };
 
@@ -48,7 +52,7 @@ exports.deleteSauce = (req, res, next) => {
             fs.unlink(`images/${filename}`, () => {
                 //on supprime l'image du dossier images
                 Sauce.deleteOne({ _id: req.params.id }) //et supprime la sauce de la collection
-                    .then(() => res.status(200).json({ message: `Sauce supprimée !` }))
+                    .then(() => res.status(200).json({ message: `Votre sauce a bien été supprimée !` }))
                     .catch((error) => res.status(400).json({ error }));
             });
         })
@@ -69,6 +73,7 @@ exports.getAllSauces = (req, res, next) => {
         .catch((error) => res.status(400).json({ error }));
 };
 
+//Incrémentation des likes et dislikes des sauces
 exports.likeDislikeSauce = (req, res, next) => {
     const like = req.body.like;
     const userId = req.body.userId;
@@ -76,30 +81,7 @@ exports.likeDislikeSauce = (req, res, next) => {
 
     //Définit le statut de like (1,-1,0,defaut)
     switch (like) {
-        case 1: //L'utilisateur aime la sauce
-            Sauce.updateOne(
-                { _id: id },
-                {
-                    $inc: { likes: 1 }, //On incrémente les likes
-                    $push: { usersLiked: userId }, //On ajoute l'utilisateur au tableau usersLiked
-                }
-            )
-                .then(() =>res.status(201).json({ message: `Vous aimez la sauce` })
-                )
-                .catch((error) => res.status(500).json({ error }));
-            break;
-        case -1: //L'utilisateur n'aime pas la sauce
-            Sauce.updateOne(
-                { _id: id },
-                {
-                    $inc: { dislikes: 1 }, //On incrémente les dislikes
-                    $push: { usersDisliked: userId }, //On ajoute l'utilisateur au tableau usersDisliked
-                }
-            )
-                .then(() =>res.status(200).json({ message: `Vous n'aimez pas la sauce` })
-                )
-                .catch((error) => res.status(500).json({ error }));
-            break;
+
         case 0:
             Sauce.findOne({ _id: id })
                 .then((sauce) => {
@@ -112,9 +94,9 @@ exports.likeDislikeSauce = (req, res, next) => {
                                 _id: req.params.id,
                             }
                         )
-                            .then(() => {res.status(200).json({ message: `Vote annulé  pour la sauce ${sauce.name}` });
+                            .then(() => {res.status(201).json({ message: `Vote annulé  pour la sauce ${sauce.name}` });
                             })
-                            .catch((error) => res.status(500).json({ error }));
+                            .catch((error) => res.status(400).json({ error }));
                     }
                     if (sauce.usersDisliked.includes(userId)) {
                         Sauce.updateOne(
@@ -124,16 +106,42 @@ exports.likeDislikeSauce = (req, res, next) => {
                                 $pull: { usersDisliked: userId }, //On sort l'utilisateur du tableau usersDisliked
                             }
                         )
-                            .then(() =>res.status(200).json({ message: `Vote annulé  pour la sauce ${sauce.name}` })
+                            .then(() =>res.status(201).json({ message: `Vote annulé  pour la sauce ${sauce.name}` })
                             )
-                            .catch((error) => res.status(500).json({ error }));
+                            .catch((error) => res.status(400).json({ error }));
                     }
                 })
-                .catch((error) => res.status(500).json({ error }));
+                .catch((error) => res.status(404).json({ error }));
+            break;
+
+        case 1: //L'utilisateur aime la sauce
+            Sauce.updateOne(
+                { _id: id },
+                {
+                    $inc: { likes: 1 }, //On incrémente les likes
+                    $push: { usersLiked: userId }, //On ajoute l'utilisateur au tableau usersLiked
+                }
+            )
+                .then(() =>res.status(201).json({ message: `Votre like a bien été pris en compte !` })
+                )
+                .catch((error) => res.status(400).json({ error }));
+            break;
+
+        case -1: //L'utilisateur n'aime pas la sauce
+            Sauce.updateOne(
+                { _id: id },
+                {
+                    $inc: { dislikes: 1 }, //On incrémente les dislikes
+                    $push: { usersDisliked: userId }, //On ajoute l'utilisateur au tableau usersDisliked
+                }
+            )
+                .then(() =>res.status(201).json({ message: `Votre dislike a bien été pris en compte !` })
+                )
+                .catch((error) => res.status(400).json({ error }));
             break;
 
         default:
-            alert(`Veuillez contacter l'administrateur du site`);
+            alert(`Mauvaise requête !`);
             break;
         }
     };

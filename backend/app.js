@@ -1,7 +1,6 @@
 const express = require("express"); //Import du framework express pour node.js
 const mongoose = require("mongoose"); //Importe Mongoose qui permet la création de modèle pour mongoDB
 const helmet = require("helmet");//Importe helmet pour sécuriser les en-têtes des requêtes
-const cookieSession = require('cookie-session');
 const mongoSanitize = require('express-mongo-sanitize');//Import mongo-sanitize qui sert à empêcher l'injection de code dans les champs utilisateurs
 const path = require('path');//Permet d'accéder aux chemins d'accès des fichiers
 const xssClean = require("xss-clean");
@@ -40,20 +39,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Options pour la sécurité des cookies
-//Les cookies de session sont donc utilisés pour stocker des informations sur la session en cours.
-//ils utilisent des cookies de session pour se souvenir d’un utilisateur pendant une période limitée.
-const expireDate = new Date(Date.now()+ 3600000); //1 heure (60*60*1000)
-app.use(cookieSession({
-    name : 'session',
-    secret : process.env.SECRET_SES,
-    cookie: {
-        secure: true,
-        httpOnly: true,
-        domain: 'http://localhost:3000',
-        expires: expireDate
-    }
-}));
 
 app.use(helmet());//Applique les sous-plugins de helmet
 

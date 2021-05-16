@@ -26,10 +26,13 @@ const emailMask2Options = {
 
 //Enregistrement d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
+    if (!req.body.password || !req.body.email){
+        return res.status(400).json({ message: "Bad request !"});
+    }
+
     if (!schema.validate(req.body.password)) {
         //Renvoie une erreur si le schema de mot de passe n'est pas respecté
-        res.status(401).json({ message: "Mot de passe pas assez sécurisé, il doit contenir au moins 8 caractères, un chiffre, une majuscule, une minuscule, un symbole et ne pas contenir d'espace !" });
-        return false;
+        return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères, un chiffre, une majuscule, une minuscule, un symbole et ne pas contenir d'espace !" });
     }
     bcrypt
         .hash(req.body.password, 10) //On hashe le mot de passe et on le sale 10 fois
@@ -41,13 +44,17 @@ exports.signup = (req, res, next) => {
             user
                 .save() //on sauvegarde les données du nouvel utilisateur dans la base de données
                 .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
-                .catch((error) => res.status(400).json({ error }));
+                .catch((error) => res.status(500).json({ error }));
         })
         .catch((error) => res.status(500).json({ error }));
 };
 
 //Connexion d'un utlisateur existant
 exports.login = (req, res, next) => {
+
+    if (!req.body.password || !req.body.email){
+        return res.status(400).json({ message: "Bad request !"});
+    }
 
     User.findOne({
         email: MaskData.maskEmail2(req.body.email, emailMask2Options),
@@ -68,7 +75,7 @@ exports.login = (req, res, next) => {
                             //On attribue un token d'authentification
                             {userId: user._id},
                             process.env.JWT_SECRET_TOKEN,
-                            {expiresIn: "1h"}
+                            {expiresIn: "60s"}
                         ),
                     });
                 })

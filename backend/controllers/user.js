@@ -26,6 +26,8 @@ const emailMask2Options = {
 
 //Enregistrement d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
+
+    //Vérification de l'intégrité des données
     if (!req.body.password || !req.body.email){
         return res.status(400).json({ message: "Bad request !"});
     }
@@ -52,6 +54,7 @@ exports.signup = (req, res, next) => {
 //Connexion d'un utlisateur existant
 exports.login = (req, res, next) => {
 
+    // Vérification de l'intégrité des données
     if (!req.body.password || !req.body.email){
         return res.status(400).json({ message: "Bad request !"});
     }

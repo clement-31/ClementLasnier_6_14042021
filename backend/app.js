@@ -1,7 +1,7 @@
 const express = require("express"); //Import du framework express pour node.js
 const mongoose = require("mongoose"); //Importe Mongoose qui permet la création de modèle pour mongoDB
 const helmet = require("helmet");//Importe helmet pour sécuriser les en-têtes des requêtes
-const mongoSanitize = require('express-mongo-sanitize');//Import mongo-sanitize qui sert à empêcher l'injection de code dans les champs utilisateurs
+const mongoSanitize = require('express-mongo-sanitize');//Importe mongo-sanitize qui sert à empêcher l'injection de code dans les champs utilisateurs
 const path = require('path');//Permet d'accéder aux chemins d'accès des fichiers
 const xssClean = require("xss-clean");
 require('dotenv').config();//Permet de créer un environnement de variables

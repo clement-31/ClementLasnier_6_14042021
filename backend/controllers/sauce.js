@@ -1,14 +1,14 @@
 const Sauce = require("../models/sauce"); //Importation du modèle de sauce
 const fs = require("fs"); //Système de gestion de fichier de Node
 
-//Créer une sauce
-    if(!req.body.name || !req.body.imageUrl || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
-    || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
-    || !req.body.userId) {
-    return res.status(400).json({ message: "Bad request !"});
+exports.createSauce = (req, res, next) => {
+    //Créer une sauce
+    if(!req.body.name || !req.body.imageUrl || !req.body.id || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
+        || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
+        || !req.body.userId) {
+        return res.status(400).json({ message: "Bad request !"});
     }
 
-exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce); // extraire l'object JSON
     delete sauceObject._id; //retire l'id généré automatiquement par MongoDb
     const sauce = new Sauce({
@@ -26,13 +26,13 @@ exports.createSauce = (req, res, next) => {
 };
 
 //Modifier une sauce
-    if(!req.body.name || !req.body.imageUrl || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
-    || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
-    || !req.body.userId) {
-    return res.status(400).json({ message: "Bad request !"});
+exports.modifySauce = (req, res, next) => {
+    if(!req.body.name || !req.body.imageUrl || !req.body.id || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
+        || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
+        || !req.body.userId) {
+        return res.status(400).json({ message: "Bad request !"});
     }
 
-exports.modifySauce = (req, res, next) => {
     if (req.file) {
         Sauce.findOne({ _id: req.params.id }).then((sauce) => {
             const fileName = sauce.imageUrl.split("/images/")[1];
@@ -56,14 +56,13 @@ exports.modifySauce = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
 };
 
+
 //Supprimer une sauce
-    if(!req.body.name || !req.body.imageUrl || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
-        || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
-        || !req.body.userId) {
+exports.deleteSauce = (req, res, next) => {
+    if(!req.params.id) {
         return res.status(400).json({ message: "Bad request !"});
     }
 
-exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id }) //Trouve la sauce correspondant à l'id
         .then((sauce) => {
             const filename = sauce.imageUrl.split("/images/")[1];
@@ -77,39 +76,39 @@ exports.deleteSauce = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
 };
 
+
 //Récupérer une sauce
-    if(!req.body.name || !req.body.imageUrl || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
-    || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
-    || !req.body.userId) {
+exports.getOneSauce = (req, res, next) => {
+    if(!req.params.id) {
         return res.status(400).json({ message: "Bad request !"});
     }
 
-exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => res.status(200).json(sauce))
         .catch((error) => res.status(500).json({ error }));
 };
 
+
 //Récupérer toutes les sauces
-    if(!req.body.name || !req.body.imageUrl || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
-    || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
-    || !req.body.userId){
+exports.getAllSauces = (req, res, next) => {
+    if(!req.body.name || !req.body.imageUrl || !req.body.id || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
+        || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
+        || !req.body.userId){
         return res.status(400).json({ message: "Bad request !"});
     }
-exports.getAllSauces = (req, res, next) => {
+
     Sauce.find()
         .then((sauces) => res.status(200).json(sauces))
         .catch((error) => res.status(500).json({ error }));
 };
 
+
 //Incrémentation des likes et dislikes des sauces
-    if(!req.body.name || !req.body.imageUrl || !req.body.manufacturer || !req.body.description || !req.body.mainPepper
-    || !req.body.heat || !req.body.likes || !req.body.dislikes || !req.body.usersLiked || !req.body.usersDisliked
-    || !req.body.userId){
-    return res.status(400).json({ message: "Bad request !"});
+exports.likeDislikeSauce = (req, res, next) => {
+    if(!req.body.like || !req.body.userId || !req.params.id){
+        return res.status(400).json({ message: "Bad request !"});
     }
 
-exports.likeDislikeSauce = (req, res, next) => {
     const like = req.body.like;
     const userId = req.body.userId;
     const id = req.params.id;

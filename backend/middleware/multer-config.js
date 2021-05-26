@@ -15,12 +15,13 @@ const storage = multer.diskStorage({
 
     filename: (req, file, callback) => {
         //Création d'un nom unique pour la nouvelle image
-        const name = file.originalname.split(".").join('_').split(".")[0]; //Elimination des espaces, remplacés par des underscores _
+        const name = file.originalname.split(".").join('_').split(".")[0];
         const extension = MIME_TYPES[file.mimetype];
         callback(null, name + Date.now() + "." + extension);
     },
 });
 
 module.exports = multer({ storage: storage }).single("image");
+
 
 

@@ -7,12 +7,12 @@ const User = require("../models/user");
 const passwordValidator = require("password-validator");
 const schema = new passwordValidator(); //Création d'un schema pour obtenir des mots de passe plus sécurisés
 schema
-    .is().min(8) // minimum 8 caractères
-    .has().digits(1) // minimum 1 chiffre
-    .has().uppercase(1) // minimum 1 caractère majuscule
-    .has().lowercase(1) // minimum 1 caractère minuscule
-    .has().symbols(1) // minimum 1 symbole
-    .has().not().spaces(); // ne doit pas contenir d'espace
+    .is().min(8)
+    .has().digits(1)
+    .has().uppercase(1)
+    .has().lowercase(1)
+    .has().symbols(1)
+    .has().not().spaces();
 
 //On masque l'email
 const emailMask2Options = {
@@ -37,14 +37,14 @@ exports.signup = (req, res, next) => {
         return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères, un chiffre, une majuscule, une minuscule, un symbole et ne pas contenir d'espace !" });
     }
     bcrypt
-        .hash(req.body.password, 10) //On hashe le mot de passe et on le sale 10 fois
+        .hash(req.body.password, 10)
         .then((hash) => {
             const user = new User({
-                email: MaskData.maskEmail2(req.body.email, emailMask2Options), //l'email est masqué
-                password: hash, //le mot de passe est crypté
+                email: MaskData.maskEmail2(req.body.email, emailMask2Options),
+                password: hash,
             });
             user
-                .save() //on sauvegarde les données du nouvel utilisateur dans la base de données
+                .save()
                 .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
                 .catch((error) => res.status(500).json({ error }));
         })
@@ -67,7 +67,7 @@ exports.login = (req, res, next) => {
                 return res.status(401).json({error: "Utilisateur non trouvé !"});
             }
             bcrypt
-                .compare(req.body.password, user.password) //on compare le mot de passe de la requête avec le hash de l'utilisateur
+                .compare(req.body.password, user.password)
                 .then((valid) => {
                     if (!valid) {
                         return res.status(401).json({error: "Mot de passe incorrect !"});

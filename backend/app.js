@@ -5,10 +5,11 @@ const mongoSanitize = require('express-mongo-sanitize');//Importe mongo-sanitize
 const path = require('path');//Permet d'accéder aux chemins d'accès des fichiers
 const xssClean = require("xss-clean");
 require('dotenv').config();//Permet de créer un environnement de variables
-console.log(process.env);
+
 const sauceRoutes = require('./routes/sauce');//Importe le routeur pour les sauces
 const userRoutes = require('./routes/user');//Importe le routeur pour les utilisateurs
 const bodyParser= require('body-parser');
+const rateLimit = require("express-rate-limit");
 
 //Connecte l'API à la base de données MongoDB grâce à Mongoose
 mongoose.connect(
@@ -58,5 +59,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));//Permet de s
 
 app.use('/api/sauces', sauceRoutes);//Sert les routes concernant les sauces pour toute demande vers le endpoint /api/sauces
 app.use('/api/auth', userRoutes);//Sert les routes concernant les utilisateurs pour toute demande vers le endpoint /api/auth
+
+app.use(rateLimit());
 
 module.exports = app;

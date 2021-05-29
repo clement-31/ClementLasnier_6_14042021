@@ -37,6 +37,12 @@ des schémas de données stricts.
 ### Installation et lancement
 
 - Cloner le projet
+- Ajouter un fichier nommé ".env" dans le dossier backend avec le contenu suivant :
+- # Authentification
+JWT_SECRET_TOKEN="RANDOM_KEY"
+
+  # dburi
+database='mongodb+srv://newuserP6:P6Xolosa31@clusterp6.whu2r.mongodb.net/Projet6OC?retryWrites=true&w=majority'
 - Ouvrir un terminal côté backend et saisir "npm install", puis "nodemon server" ; l'écoute se fait sur le port 3000 et la connexion à MongoDB est établie
 - Ouvrir un nouveau terminal côté frontend et saisir successivement "npm install" puis "npm start" dans la fenêtre de commande
 - Saisir "ng serve" ; l'écoute se fait sur le port 4200 (ouvrir la page http://localhost:4200 dans le navigateur internet)

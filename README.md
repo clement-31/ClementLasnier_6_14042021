@@ -38,7 +38,7 @@ des schémas de données stricts.
 
 - Cloner le projet
 - Ajouter un fichier nommé ".env" dans le dossier backend avec le contenu suivant :
-- Authentification
+  Authentification
 JWT_SECRET_TOKEN="RANDOM_KEY"
 
   dburi

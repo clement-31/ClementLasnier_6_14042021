@@ -13,7 +13,7 @@ const rateLimit = require("express-rate-limit");
 
 //Connecte l'API à la base de données MongoDB grâce à Mongoose
 mongoose.connect(
-    'mongodb+srv://newuserP6:P6Xolosa31@clusterp6.whu2r.mongodb.net/Projet6OC?retryWrites=true&w=majority',
+    process.env.database,
     { useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true}

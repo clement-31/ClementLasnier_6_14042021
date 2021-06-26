@@ -1,6 +1,7 @@
 const Sauce = require("../models/sauce"); //Importation du modèle de sauce
 const fs = require("fs"); //Système de gestion de fichier de Node
 
+//Créer une sauce
 exports.createSauce = (req, res, next) => {
     const {
         name, manufacturer, description, mainPepper, heat, userId
@@ -28,37 +29,29 @@ exports.createSauce = (req, res, next) => {
 };
 
 //Modifier une sauce
-exports.modifySauce = (req, res, next) => {
-    const {
-        name, manufacturer, description, mainPepper, heat, userId
-    } = JSON.parse(req.body.sauce);
-    if(!name || !req.file || !manufacturer || !description || !mainPepper
-        || !heat
-        || !userId) {
-        return res.status(400).json({ message: "Bad request !"});
-    }
+exports.modifySauce = (req, res ,next) =>{
+    let sauceObjet = {};
+    req.file ? (
+        Sauce.findOne({
+            _id: req.params.id
+        }).then((sauce) => {
+            const filename = sauce.imageUrl.split('/images/')[1]
+            fs.unlinkSync(`images/${filename}`)
+        }),
+            sauceObjet = {
 
-    if (req.file) {
-        Sauce.findOne({ _id: req.params.id }).then((sauce) => {
-            const fileName = sauce.imageUrl.split("/images/")[1];
-            fs.unlink(`images/${fileName}`, (err) => {
-                //On supprime l'ancienne image
-                if (err) throw err;
-                console.log("Image supprimée: " + fileName);
-            });
-        });
-    }
-    const sauceObject = req.file? {
-            ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+                ...JSON.parse(req.body.sauce),
+                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+            }
+    ): (
+        sauceObjet = {
+            ...req.body
         }
-        : { ...req.body };
-    Sauce.updateOne(
-        { _id: req.params.id },
-        { ...sauceObject, _id: req.params.id }
     )
-        .then(() => res.status(200).json({ message: `Votre sauce a bien été modifiée !` }))
-        .catch((error) => res.status(500).json({ error }));
+
+    Sauce.updateOne({ _id: req.params.id}, {...sauceObjet, _id: req.params.id})
+        .then(() => res.status(200).json({message:'votre sauce a bien été modifiée!'}))
+        .catch(error => res.status(500).json({error}));
 };
 
 
